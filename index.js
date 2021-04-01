@@ -1,4 +1,4 @@
-const x509 = require('x509')
+const { Certificate } = require('@fidm/x509')
 const crypto = require('crypto')
 const forge = require('node-forge')
 const ECKey = require('ec-key')
@@ -52,8 +52,8 @@ class PaymentToken {
    */
   merchantId (cert) {
     try {
-      const info = x509.parseCert(cert)
-      return info.extensions[MERCHANT_ID_FIELD_OID].split('@')[1]
+      const info = Certificate.fromPEM(cert)
+      return info.getExtension(MERCHANT_ID_FIELD_OID, 'value');
     } catch (e) {
       console.error('Unable to extract merchant ID from certificate', e)
     }
@@ -66,10 +66,10 @@ class PaymentToken {
    */
   symmetricKey (merchantId, sharedSecret) {
     const KDF_ALGORITHM = '\x0did-aes256-GCM' // The byte (0x0D) followed by the ASCII string "id-aes256-GCM". The first byte of this value is an unsigned integer that indicates the string’s length in bytes; the remaining bytes are a constiable-length string.
-    const KDF_PARTY_V = Buffer.from(merchantId, 'hex').toString('binary') // The SHA-256 hash of your merchant ID string literal; 32 bytes in size.
+    const KDF_PARTY_V = Buffer.from(merchantId.toString('binary').substr(2), 'hex').toString('binary'); // The SHA-256 hash of your merchant ID string literal; 32 bytes in size.
     const KDF_PARTY_U = 'Apple' // The ASCII string "Apple". This value is a fixed-length string.
     const KDF_INFO = KDF_ALGORITHM + KDF_PARTY_U + KDF_PARTY_V
-
+    
     let hash = crypto.createHash('sha256')
     hash.update(Buffer.from('000000', 'hex'))
     hash.update(Buffer.from('01', 'hex'))

@@ -1,7 +1,8 @@
-const x509 = require('x509')
 const crypto = require('crypto')
 const forge = require('node-forge')
 const ECKey = require('ec-key')
+
+const { Certificate } = require('@fidm/x509')
 
 const MERCHANT_ID_FIELD_OID = '1.2.840.113635.100.6.32'
 
@@ -51,13 +52,12 @@ class PaymentToken {
    * Parsing the certificate with the x509 NPM package - https://www.npmjs.com/package/x509#x509parsecert-cert-
    */
   merchantId (cert) {
-    try {
-      const info = x509.parseCert(cert)
-      return info.extensions[MERCHANT_ID_FIELD_OID].split('@')[1]
-    } catch (e) {
-      console.error('Unable to extract merchant ID from certificate', e)
-    }
-  }
+    const certPem = Certificate.fromPEM(cert)
+    const mechantIdBuffer = certPem.getExtension(MERCHANT_ID_FIELD_OID).value
+    const mechantIdStr = mechantIdBuffer.toString().trim()
+
+    return mechantIdStr.includes('@') ? mechantIdStr.split('@')[1] : mechantIdStr
+}
 
   /**
    * Derive the symmetric key using the key derivation function described in NIST SP 800-56A, section 5.8.1

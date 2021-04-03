@@ -1,5 +1,5 @@
 {
-  "name": "apple-pay-decrypt-with-fidm-x509",
+  "name": "@bitfly/apple-pay-decrypt-with-fidm-x509",
   "version": "1.0.0",
   "description": "Apple Pay tokens decryption using @fidm/x509",
   "main": "index.js",

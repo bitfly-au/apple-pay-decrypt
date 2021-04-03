@@ -1,14 +1,14 @@
 {
-  "name": "apple-pay-decrypt",
-  "version": "1.0.7",
-  "description": "Enables decryption of Apple Pay tokens.",
+  "name": "apple-pay-decrypt-with-fidm-x509",
+  "version": "1.0.0",
+  "description": "Apple Pay tokens decryption using @fidm/x509",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com:bitfly-au/apple-pay-decrypt.git"
+    "url": "git+ssh://git@github.com/bitfly-au/apple-pay-decrypt.git"
   },
   "keywords": [
     "apple-pay",
